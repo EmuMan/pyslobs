@@ -48,7 +48,7 @@ async def on_ready():
     mic = await slobs.get_audio_source(key=(lambda s: s.source_id.startswith("wasapi_input_capture")))
 
     scenes["desktop"] = await slobs.get_scene(key=(lambda s: s.name == "Desktop"))
-    scenes["game"] = await slobs.get_scene(key=(lambda s: s.name == "Game"))
+    scenes["game"] = await slobs.get_scene(key=(lambda s: s.name == "Just Game"))
 
     try:
         print("Waiting for luamacros script...")
@@ -59,10 +59,11 @@ async def on_ready():
             raw = b""
             while win32pipe.PeekNamedPipe(key_pipe, 0)[1] != 0:
                 raw += win32file.ReadFile(key_pipe, 1024)[1]
-            for key in raw.split(b"\n"):
+            for key in raw.split(b"\r\n"): # luamacros likes crlfs
                 if key != b"":
                     await on_key_press(str(key, "ascii"))
             await asyncio.sleep(0.1)
+            
     except pywintypes.error as e:
         if e.winerror == 109:
             print("Luamacros script closed.")
