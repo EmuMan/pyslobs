@@ -368,8 +368,40 @@ class Source:
     async def delete(self) -> None:
         await self.connection.send_and_wait_response("removeSource", "SourcesService", [self.id])
 
+    async def duplicate(self) -> None:
+        await self.connection.send_and_wait_response("duplicate", self.resource_id)
+
+    async def get_model(self) -> None:
+        # TODO: Implement
+        pass
+
+    async def get_properties_form_data(self) -> None:
+        # TODO: Implement
+        pass
+
+    async def get_settings(self) -> dict:
+        return (await self.connection.send_and_wait_response("getSettings", self.resource_id))["result"]
+
+    async def has_props(self) -> bool:
+        return (await self.connection.send_and_wait_response("hasProps", self.resource_id))["result"]
+
+    async def refresh(self) -> None:
+        await self.connection.send_and_wait_response("refresh", self.resource_id)
+
+    async def set_name(self, name: str) -> None:
+        await self.connection.send_and_wait_response("setName", self.resource_id, [name])
+
+    async def set_properties_form_data(self) -> None:
+        # TODO: Implement
+        pass
+
+    async def update_settings(self, settings: dict) -> None:
+        await self.connection.send_and_wait_response("updateSettings", self.resource_id, [settings])
+
     async def show_properties(self) -> None:
         await self.connection.send_and_wait_response("showSourceProperties", "SourcesService", [self.source_id])
+
+    
 
 
 class AudioSource:
@@ -394,3 +426,24 @@ class AudioSource:
     async def set_muted(self, muted: bool) -> None:
         await self.connection.send_and_wait_response("setMuted", self.resource_id, [muted])
         self.muted = muted
+
+class SceneItem:
+
+    def __init__(self, connection: SlobsConnection, data: dict):
+        self.connection = connection
+        self.id = data["id"]
+        self.locked = data["locked"]
+        self.name = data["name"]
+        self.node_id = data["nodeId"]
+        self.parent_id = data["parentId"]
+        self.recording_visible = data["recordingVisible"]
+        self.scene_id = data["sceneId"]
+        self.scene_item_id = data["sceneItemId"]
+        self.scene_node_type = data["sceneNodeType"]
+        self.source_id = data["sourceId"]
+        self.stream_visible = data["streamVisible"]
+        self.transform = data["transform"]
+        self.visible = data["visible"]
+    
+    async def add_to_selection(self) -> None:
+        await self.connectionsend_and_wait_response
